@@ -22,7 +22,6 @@ export class AppService {
   public changeCount(val: number): void {
     this.count = val;
     this.questions = this.generateQuestions();
-    console.log(this.questions);
   }
 
   private generateQuestions(): Question[] {

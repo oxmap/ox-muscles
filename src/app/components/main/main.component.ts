@@ -1,5 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
-import { MatStepper } from "@angular/material/stepper";
+import { Component } from "@angular/core";
 import { AppService } from "src/app/services/app.service";
 
 @Component({

@@ -4,7 +4,10 @@
     <ng-container
       *ngTemplateOutlet="
         body;
-        context: { main: 'Hello', answers: ['1', '2', '3', '4'] }
+        context: {
+          main: appService.questions[appService.current].main,
+          answers: appService.questions[appService.current].answers
+        }
       "
     ></ng-container>
   </mat-step>
@@ -69,7 +72,7 @@
       <p class="status">{{ appService.current }}/{{ appService.count }}</p>
     </mat-card>
     <div class="grid">
-      <mat-card *ngFor="let answer of answers">
+      <mat-card *ngFor="let answer of answers" (click)="stepper.next()">
         <p class="answer">{{ answer }}</p>
       </mat-card>
     </div>
