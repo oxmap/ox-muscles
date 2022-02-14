@@ -1,1 +1,63 @@
-{{ appService.count }}
+<mat-horizontal-stepper linear #stepper labelPosition="bottom">
+  <mat-step>
+    <ng-template matStepLabel>Часть тела</ng-template>
+    <ng-container
+      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+    ></ng-container>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Секция</ng-template>
+    <ng-container
+      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+    ></ng-container>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>От</ng-template>
+    <ng-container
+      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+    ></ng-container>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>К</ng-template>
+    <ng-container
+      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+    ></ng-container>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Функия</ng-template>
+    <ng-container
+      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+    ></ng-container>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Иннервация</ng-template>
+    <ng-container
+      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+    ></ng-container>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Кровь</ng-template>
+    <ng-container
+      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+    ></ng-container>
+  </mat-step>
+
+  <!-- TODO prevent duplicate for stepicon -->
+  <ng-template matStepperIcon="number" let-index="index">
+    <span>
+      {{ index + 1 }}
+    </span>
+  </ng-template>
+  <ng-template matStepperIcon="edit" let-index="index">
+    <span>
+      {{ index + 1 }}
+    </span>
+  </ng-template>
+  <ng-template matStepperIcon="done" let-index="index">
+    <span>
+      {{ index + 1 }}
+    </span>
+  </ng-template>
+</mat-horizontal-stepper>
+
+<ng-template #body> test </ng-template>

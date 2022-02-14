@@ -1,1 +1,32 @@
+:host ::ng-deep {
+  .mat-step-header {
+    .mat-step-icon {
+      font-weight: 500;
+      background-color: white;
+      color: #969ba5;
+      border: 1px solid #e6e6e6;
+    }
 
+    .mat-step-icon-invalid {
+      background-color: #f2f4f7;
+    }
+
+    .mat-step-icon-selected {
+      border-color: #ff4114;
+      background-color: white;
+    }
+
+    .mat-step-icon-state-done {
+      background-color: #969ba5;
+      color: white;
+      border-color: transparent;
+    }
+  }
+  .mat-stepper-label-position-bottom {
+    .mat-horizontal-stepper-header::after,
+    .mat-horizontal-stepper-header::before,
+    .mat-stepper-horizontal-line {
+      top: 0.6em;
+    }
+  }
+}
