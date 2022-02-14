@@ -18,6 +18,8 @@
 *.sublime-workspace
 .angular/cache
 
+firebase-debug.log
+
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json

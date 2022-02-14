@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist",
+    "public": "dist/ox-muscles",
     "ignore": [
       "firebase.json",
       "**/.*",
