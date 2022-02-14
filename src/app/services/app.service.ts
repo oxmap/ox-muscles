@@ -11,12 +11,19 @@ import { Question } from "../interfaces/question.interface";
 })
 export class AppService {
   public count = 15;
-  public current = 0;
+  public curMuscle = 0;
   public questions: Question[] = [];
+  public correctAnswers: number = 0;
+
   private data: Muscle[];
 
   private bodies: string[];
   private sections: string[];
+
+  public get isEnd(): boolean {
+    return this.count <= this.curMuscle + 1;
+  }
+
   constructor() {
     this.data = this.shuffleArray(data);
     this.bodies = this.data
@@ -25,6 +32,10 @@ export class AppService {
     this.sections = this.data
       .map((el) => el.section)
       .filter((v, i, a) => a.indexOf(v) === i);
+  }
+
+  public reset(): void {
+    this.curMuscle = 0;
   }
 
   public validate(answerIndex: number | null, question: Question): boolean {
@@ -57,7 +68,6 @@ export class AppService {
       .filter((key) => !["name", "id"].includes(key))
       .map((key) => {
         const answers = this.getRandomAnswer(muscle, key);
-        console.log(answers);
         const res = {
           main: muscle.name,
           muscleId: muscle.id,
@@ -70,20 +80,21 @@ export class AppService {
 
   private getRandomAnswer(muscle: Muscle, key: string): string[] {
     let answers = [(muscle as any)[key]];
-    const array =
+    let resArray: any =
       key === "body"
         ? [...this.bodies]
         : key === "section"
         ? [...this.sections]
         : [...this.data];
+    resArray = resArray.filter((el: any) => el !== (muscle as any)[key]);
     if (key !== "body" && key !== "section") {
       for (let i = 0; i < 3; i++) {
-        const randomIndex = Math.floor(Math.random() * array.length);
+        const randomIndex = Math.floor(Math.random() * resArray.length);
         answers.push((this.data as any)[randomIndex][key]);
       }
       return this.shuffleArray(answers);
     } else {
-      return [...answers, ...this.shuffleArray(array).slice(0, 3)];
+      return this.shuffleArray([...resArray.slice(0, 3), [...answers]]);
     }
   }
 

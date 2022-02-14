@@ -10,9 +10,16 @@ import { AppComponent } from "./components/app/app.component";
 import { MainComponent } from "./components/main/main.component";
 import { StartComponent } from "./components/start/start.component";
 import { NumericDirective } from "./directives/numeric.directive";
+import { ResultsComponent } from "./components/results/results.component";
 
 @NgModule({
-  declarations: [AppComponent, StartComponent, NumericDirective, MainComponent],
+  declarations: [
+    AppComponent,
+    StartComponent,
+    NumericDirective,
+    MainComponent,
+    ResultsComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

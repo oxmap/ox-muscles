@@ -5,9 +5,14 @@
       *ngTemplateOutlet="
         body;
         context: {
-          main: appService.questions[appService.current].main,
-          answers: appService.questions[appService.current].answers,
-          question: appService.questions[appService.current]
+          main: appService.questions[
+            appService.curMuscle + stepper.selectedIndex
+          ].main,
+          answers:
+            appService.questions[appService.curMuscle + stepper.selectedIndex]
+              .answers,
+          question:
+            appService.questions[appService.curMuscle + stepper.selectedIndex]
         }
       "
     ></ng-container>
@@ -39,7 +44,9 @@
   <div class="main-body">
     <mat-card class="main-card">
       <p class="content">{{ main }}</p>
-      <p class="status">{{ appService.current + 1 }}/{{ appService.count }}</p>
+      <p class="status">
+        {{ appService.curMuscle + 1 }}/{{ appService.count }}
+      </p>
     </mat-card>
     <div class="grid">
       <mat-card

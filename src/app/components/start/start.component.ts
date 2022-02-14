@@ -8,12 +8,14 @@ import { AppService } from "src/app/services/app.service";
   styleUrls: ["./start.component.scss"],
 })
 export class StartComponent {
-  public val: number = 15;
+  public val: number | string = 15;
 
-  constructor(private router: Router, private appService: AppService) {}
+  constructor(private router: Router, private appService: AppService) {
+    this.appService.reset();
+  }
 
   public start(): void {
-    this.appService.changeCount(this.val);
+    this.appService.changeCount(parseInt(this.val as string, 10));
     this.router.navigateByUrl("/main");
   }
 }
