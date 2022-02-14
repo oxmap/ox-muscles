@@ -52,6 +52,7 @@ export class AppService {
   public changeCount(val: number): void {
     this.count = val;
     this.questions = this.generateQuestions();
+    console.log(this.questions);
   }
 
   private generateQuestions(): Question[] {
@@ -94,7 +95,7 @@ export class AppService {
       }
       return this.shuffleArray(answers);
     } else {
-      return this.shuffleArray([...resArray.slice(0, 3), [...answers]]);
+      return this.shuffleArray([...resArray.slice(0, 3), ...answers]);
     }
   }
 
