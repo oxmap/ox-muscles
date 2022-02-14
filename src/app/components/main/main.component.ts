@@ -12,11 +12,15 @@ import { AppService } from "src/app/services/app.service";
 export class MainComponent {
   public curAnswerIndex: number | null = null;
   public submitText: string = "Ответить";
-  public isSuccess!: boolean;
+  public validIndex!: number | null;
   public submitted: boolean = false;
   public steps: any[];
   public questionIndex: number = 0;
   @ViewChild(MatStepper) stepper!: MatStepper;
+
+  public get isSuccess(): boolean {
+    return this.validIndex === this.curAnswerIndex;
+  }
 
   constructor(public appService: AppService, private router: Router) {
     this.steps = [
@@ -45,13 +49,14 @@ export class MainComponent {
     this.submitted = !this.submitted;
     if (this.submitted) {
       this.submitText = "Дальше";
-      this.isSuccess = this.appService.validate(this.curAnswerIndex, question);
+      this.validIndex = this.appService.validate(question);
       if (this.isSuccess) {
         this.appService.correctAnswers++;
       }
     } else {
       this.submitText = "Ответить";
       this.curAnswerIndex = null;
+      this.validIndex = null;
       this.questionIndex++;
       if (this.stepper.selectedIndex === this.steps.length - 1) {
         this.stepper.selectedIndex = 0;

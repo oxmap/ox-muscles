@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Muscle } from "../interfaces/muscle.interface";
 import data from "src/assets/data.json";
 import { Question } from "../interfaces/question.interface";
+import { NameIdEntity } from "../interfaces/name-id-entity.interface";
 
 /**
  * Сервис для аутентификации
@@ -17,7 +18,7 @@ export class AppService {
 
   private data: Muscle[] = [];
 
-  private sections: string[] = [];
+  private sections: NameIdEntity[] = [];
 
   public get isEnd(): boolean {
     return this.count <= this.curMuscle + 1;
@@ -29,14 +30,10 @@ export class AppService {
     this.curMuscle = 0;
   }
 
-  public validate(answerIndex: number | null, question: Question): boolean {
-    if (answerIndex === null) {
-      return false;
-    }
-    return (
-      (this.data.find((el) => el.id === question.muscleId) as any)[
-        question.questionKey
-      ] === question.answers[answerIndex]
+  public validate(question: Question): number | null {
+    const muscle = this.data.find((el) => el.id === question.muscleId);
+    return question.answers.findIndex(
+      (el) => el.name === (muscle as any)[question.questionKey]
     );
   }
 
@@ -44,7 +41,7 @@ export class AppService {
     this.count = val;
     this.data = this.shuffleArray(data);
     this.sections = this.data
-      .map((el) => el.section)
+      .map((el) => ({ name: el.section, id: 0 }))
       .filter((v, i, a) => a.indexOf(v) === i);
     this.questions = this.generateQuestions();
   }
@@ -60,9 +57,13 @@ export class AppService {
 
   private getQuestionRow(muscle: Muscle): Question[] {
     return Object.keys(muscle)
-      .filter((key) => "name" !== key)
+      .filter((key) => !["name", "id"].includes(key))
       .map((key) => {
-        const answers = this.getRandomAnswer(muscle, key);
+        const answers = this.getRandomAnswer(muscle, key).map((el, i) => ({
+          name: el.name,
+          id: i,
+        }));
+
         const res = {
           main: muscle.name,
           muscleId: muscle.id,
@@ -73,14 +74,14 @@ export class AppService {
       });
   }
 
-  private getRandomAnswer(muscle: Muscle, key: string): string[] {
-    let answers = [(muscle as any)[key]];
+  private getRandomAnswer(muscle: Muscle, key: string): NameIdEntity[] {
+    let answers = [{ name: (muscle as any)[key], id: 0 }];
     let resArray: any = key === "section" ? [...this.sections] : [...this.data];
-    resArray = resArray.filter((el: any) => el !== (muscle as any)[key]);
+    resArray = resArray.filter((el: any) => el.name !== (muscle as any)[key]);
     if (key !== "section") {
       for (let i = 0; i < 3; i++) {
         const randomIndex = Math.floor(Math.random() * resArray.length);
-        answers.push((this.data as any)[randomIndex][key]);
+        answers.push({ name: (this.data as any)[randomIndex][key], id: 0 });
       }
       return this.shuffleArray(answers);
     } else {

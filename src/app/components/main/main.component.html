@@ -48,12 +48,13 @@
         *ngFor="let answer of answers; let i = index"
         [ngClass]="{
           active: curAnswerIndex === i,
-          success: isSuccess && curAnswerIndex === i && submitted,
+          success: validIndex === i && submitted,
           error: !isSuccess && curAnswerIndex === i && submitted
         }"
         (click)="!submitted && (curAnswerIndex = i)"
+        (dblclick)="!submitted && submit(question)"
       >
-        <p class="answer">{{ answer }}</p>
+        <p class="answer">{{ answer.name }}</p>
       </mat-card>
     </div>
     <button
