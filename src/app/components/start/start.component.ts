@@ -1,4 +1,6 @@
 import { Component } from "@angular/core";
+import { Router } from "@angular/router";
+import { AppService } from "src/app/services/app.service";
 
 @Component({
   selector: "app-start",
@@ -7,4 +9,11 @@ import { Component } from "@angular/core";
 })
 export class StartComponent {
   public val: number = 15;
+
+  constructor(private router: Router, private appService: AppService) {}
+
+  public start(): void {
+    this.appService.count = this.val;
+    this.router.navigateByUrl("/main");
+  }
 }

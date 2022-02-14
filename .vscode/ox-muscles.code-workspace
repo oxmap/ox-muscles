@@ -5,6 +5,15 @@
 		}
 	],
 	"settings": {
-		"editor.formatOnSave": true
+		"editor.tabSize": 2,
+		"editor.formatOnSave": true,
+		"files.exclude": {
+			"**/node_modules": true,
+			"**/coverage": true,
+			"**/public": true,
+			"**/dist": true,
+			"**/.angular/cache": true
+		},
+		"typescript.tsdk": "node_modules\\typescript\\lib"
 	}
 }
