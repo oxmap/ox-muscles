@@ -15,20 +15,15 @@ export class AppService {
   public questions: Question[] = [];
   public correctAnswers: number = 0;
 
-  private data: Muscle[];
+  private data: Muscle[] = [];
 
-  private sections: string[];
+  private sections: string[] = [];
 
   public get isEnd(): boolean {
     return this.count <= this.curMuscle + 1;
   }
 
-  constructor() {
-    this.data = this.shuffleArray(data);
-    this.sections = this.data
-      .map((el) => el.section)
-      .filter((v, i, a) => a.indexOf(v) === i);
-  }
+  constructor() {}
 
   public reset(): void {
     this.curMuscle = 0;
@@ -47,8 +42,11 @@ export class AppService {
 
   public changeCount(val: number): void {
     this.count = val;
+    this.data = this.shuffleArray(data);
+    this.sections = this.data
+      .map((el) => el.section)
+      .filter((v, i, a) => a.indexOf(v) === i);
     this.questions = this.generateQuestions();
-    console.log(this.questions);
   }
 
   private generateQuestions(): Question[] {

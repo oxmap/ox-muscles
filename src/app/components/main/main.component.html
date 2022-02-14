@@ -5,14 +5,9 @@
       *ngTemplateOutlet="
         body;
         context: {
-          main: appService.questions[
-            appService.curMuscle + stepper.selectedIndex
-          ].main,
-          answers:
-            appService.questions[appService.curMuscle + stepper.selectedIndex]
-              .answers,
-          question:
-            appService.questions[appService.curMuscle + stepper.selectedIndex]
+          main: appService.questions[questionIndex].main,
+          answers: appService.questions[questionIndex].answers,
+          question: appService.questions[questionIndex]
         }
       "
     ></ng-container>
@@ -52,17 +47,17 @@
       <mat-card
         *ngFor="let answer of answers; let i = index"
         [ngClass]="{
-          active: curIndex === i,
-          success: isSuccess && curIndex === i && submitted,
-          error: !isSuccess && curIndex === i && submitted
+          active: curAnswerIndex === i,
+          success: isSuccess && curAnswerIndex === i && submitted,
+          error: !isSuccess && curAnswerIndex === i && submitted
         }"
-        (click)="!submitted && (curIndex = i)"
+        (click)="!submitted && (curAnswerIndex = i)"
       >
         <p class="answer">{{ answer }}</p>
       </mat-card>
     </div>
     <button
-      [disabled]="curIndex === null"
+      [disabled]="curAnswerIndex === null"
       class="button"
       (click)="submit(question)"
     >
