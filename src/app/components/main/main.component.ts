@@ -20,9 +20,6 @@ export class MainComponent {
   constructor(public appService: AppService, private router: Router) {
     this.steps = [
       {
-        label: "Часть тела",
-      },
-      {
         label: "Секция",
       },
       {

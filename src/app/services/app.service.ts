@@ -17,7 +17,6 @@ export class AppService {
 
   private data: Muscle[];
 
-  private bodies: string[];
   private sections: string[];
 
   public get isEnd(): boolean {
@@ -26,9 +25,6 @@ export class AppService {
 
   constructor() {
     this.data = this.shuffleArray(data);
-    this.bodies = this.data
-      .map((el) => el.body)
-      .filter((v, i, a) => a.indexOf(v) === i);
     this.sections = this.data
       .map((el) => el.section)
       .filter((v, i, a) => a.indexOf(v) === i);
@@ -66,7 +62,7 @@ export class AppService {
 
   private getQuestionRow(muscle: Muscle): Question[] {
     return Object.keys(muscle)
-      .filter((key) => !["name", "id"].includes(key))
+      .filter((key) => "name" !== key)
       .map((key) => {
         const answers = this.getRandomAnswer(muscle, key);
         const res = {
@@ -81,14 +77,9 @@ export class AppService {
 
   private getRandomAnswer(muscle: Muscle, key: string): string[] {
     let answers = [(muscle as any)[key]];
-    let resArray: any =
-      key === "body"
-        ? [...this.bodies]
-        : key === "section"
-        ? [...this.sections]
-        : [...this.data];
+    let resArray: any = key === "section" ? [...this.sections] : [...this.data];
     resArray = resArray.filter((el: any) => el !== (muscle as any)[key]);
-    if (key !== "body" && key !== "section") {
+    if (key !== "section") {
       for (let i = 0; i < 3; i++) {
         const randomIndex = Math.floor(Math.random() * resArray.length);
         answers.push((this.data as any)[randomIndex][key]);
