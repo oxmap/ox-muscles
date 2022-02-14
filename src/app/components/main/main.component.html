@@ -2,47 +2,49 @@
   <mat-step>
     <ng-template matStepLabel>Часть тела</ng-template>
     <ng-container
-      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+      *ngTemplateOutlet="
+        body;
+        context: { main: 'Hello', answers: ['1', '2', '3', '4'] }
+      "
     ></ng-container>
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Секция</ng-template>
     <ng-container
-      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+      *ngTemplateOutlet="body; context: { main: 'Hello' }"
     ></ng-container>
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>От</ng-template>
     <ng-container
-      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+      *ngTemplateOutlet="body; context: { main: 'Hello' }"
     ></ng-container>
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>К</ng-template>
     <ng-container
-      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+      *ngTemplateOutlet="body; context: { main: 'Hello' }"
     ></ng-container>
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Функия</ng-template>
     <ng-container
-      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+      *ngTemplateOutlet="body; context: { main: 'Hello' }"
     ></ng-container>
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Иннервация</ng-template>
     <ng-container
-      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+      *ngTemplateOutlet="body; context: { main: 'Hello' }"
     ></ng-container>
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Кровь</ng-template>
     <ng-container
-      *ngTemplateOutlet="body; context: { $implicit: 'Hello' }"
+      *ngTemplateOutlet="body; context: { main: 'Hello' }"
     ></ng-container>
   </mat-step>
 
-  <!-- TODO prevent duplicate for stepicon -->
   <ng-template matStepperIcon="number" let-index="index">
     <span>
       {{ index + 1 }}
@@ -60,4 +62,16 @@
   </ng-template>
 </mat-horizontal-stepper>
 
-<ng-template #body> test </ng-template>
+<ng-template #body let-main="main" let-answers="answers">
+  <div class="main-body">
+    <mat-card class="main-card">
+      <p class="content">{{ main }}</p>
+      <p class="status">{{ appService.current }}/{{ appService.count }}</p>
+    </mat-card>
+    <div class="grid">
+      <mat-card *ngFor="let answer of answers">
+        <p class="answer">{{ answer }}</p>
+      </mat-card>
+    </div>
+  </div>
+</ng-template>

@@ -4,6 +4,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { MatStepperModule } from "@angular/material/stepper";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { MatCardModule } from "@angular/material/card";
 
 import { AppComponent } from "./components/app/app.component";
 import { MainComponent } from "./components/main/main.component";
@@ -16,6 +17,7 @@ import { NumericDirective } from "./directives/numeric.directive";
     BrowserModule,
     BrowserAnimationsModule,
     MatStepperModule,
+    MatCardModule,
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
