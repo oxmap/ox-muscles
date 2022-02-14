@@ -35,18 +35,34 @@ $current: rgb(104, 154, 211);
     .mat-horizontal-stepper-header::after,
     .mat-horizontal-stepper-header::before,
     .mat-stepper-horizontal-line {
-      top: 0.6em;
+      top: 2.1em;
     }
   }
 
   .mat-card {
     height: 20vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    &.active {
+      background: $current;
+    }
+    &.success {
+      background: $success;
+    }
+    &.error {
+      background: $error;
+    }
   }
 
   .grid {
     display: grid;
     gap: 2em;
     grid-template-columns: 1fr 1fr;
+    .mat-card {
+      cursor: pointer;
+    }
   }
 
   .main-body {
@@ -71,11 +87,10 @@ $current: rgb(104, 154, 211);
   }
 
   .answer {
-    font-size: 4em;
-    text-align: center;
+    font-size: 3em;
   }
 
-  p {
-    text-align: center;
+  .button {
+    margin: -1em auto;
   }
 }
