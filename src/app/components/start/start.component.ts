@@ -13,7 +13,7 @@ export class StartComponent {
   constructor(private router: Router, private appService: AppService) {}
 
   public start(): void {
-    this.appService.count = this.val;
+    this.appService.changeCount(this.val);
     this.router.navigateByUrl("/main");
   }
 }
