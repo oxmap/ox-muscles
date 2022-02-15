@@ -52,7 +52,7 @@ $current: rgb(104, 154, 211);
     align-items: center;
     justify-content: center;
     text-align: center;
-    word-break: break-all;
+    word-break: break-word;
     &.active {
       background: $current;
     }

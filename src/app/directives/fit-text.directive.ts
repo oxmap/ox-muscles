@@ -1,142 +1,177 @@
 import {
+  AfterViewChecked,
   AfterViewInit,
   Directive,
   ElementRef,
   HostListener,
   Input,
+  Output,
+  EventEmitter,
   OnChanges,
   OnInit,
   Renderer2,
-  SimpleChanges,
 } from "@angular/core";
 
 @Directive({
   selector: "[fittext]",
 })
-export class FittextDirective implements AfterViewInit, OnInit, OnChanges {
-  @Input() fittext: any;
-  @Input() compression? = 1;
-  @Input() activateOnResize? = true;
-  @Input() minFontSize?: number | "inherit" = 0;
-  @Input() maxFontSize?: number | "inherit" = Number.POSITIVE_INFINITY;
-  @Input() delay? = 100;
-  @Input() innerHTML: any;
-  @Input() fontUnit?: "px" | "em" | string = "px";
+export class FittextDirective
+  implements AfterViewInit, OnInit, OnChanges, AfterViewChecked
+{
+  @Input("fittext") fittext: any;
+  @Input("activateOnResize") activateOnResize: boolean = true;
+  @Input("activateOnInputEvents") activateOnInputEvents!: boolean;
+  @Input("minFontSize") minFontSize = 7;
+  @Input("maxFontSize") maxFontSize = 30;
 
-  private fittextParent!: HTMLElement;
-  private fittextElement!: HTMLElement;
-  private fittextMinFontSize!: number;
-  private fittextMaxFontSize!: number;
-  private computed!: CSSStyleDeclaration;
-  private newlines!: number;
-  private lineHeight!: string;
-  private display!: string;
-  private calcSize = 50;
+  /* Deprecated */
+  @Input("useMaxFontSize") useMaxFontSize = true;
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {
+  @Input("modelToWatch") modelToWatch: any;
+
+  @Output() fontSizeChanged: EventEmitter<number> = new EventEmitter();
+
+  private container!: HTMLElement;
+
+  private fontSize = 1000;
+  private speed = 1.05;
+  private done = false;
+
+  constructor(public el: ElementRef<HTMLElement>, public renderer: Renderer2) {
     setTimeout(() => {
-      this.fittextElement = el.nativeElement;
-      this.fittextParent = this.fittextElement.parentElement as any;
-      this.computed = window.getComputedStyle(this.fittextElement);
-      this.newlines =
-        this.fittextElement.childElementCount > 0
-          ? this.fittextElement.childElementCount
-          : 1;
-      this.lineHeight = (this.computed as any)["line-height"];
-      this.display = this.computed["display"];
+      this.container = this.el.nativeElement.parentElement as HTMLElement;
     });
   }
 
-  @HostListener("window:resize")
-  public onWindowResize = (): void => {
-    if (this.activateOnResize) {
-      this.setFontSize();
+  setFontSize(fontSize: number): void {
+    if (this.isVisible() && !this.isDone()) {
+      if (fontSize < this.minFontSize) {
+        fontSize = this.minFontSize;
+      }
+      if (fontSize > this.maxFontSize) {
+        fontSize = this.maxFontSize;
+      }
+      this.fontSize = fontSize;
+      this.fontSizeChanged.emit(fontSize);
+      this.el.nativeElement.style.setProperty(
+        "font-size",
+        fontSize.toString() + "px"
+      );
     }
-  };
-
-  public ngOnInit() {
-    this.fittextMinFontSize =
-      this.minFontSize === "inherit"
-        ? (this.computed as any)["font-size"]
-        : this.minFontSize;
-    this.fittextMaxFontSize =
-      this.maxFontSize === "inherit"
-        ? (this.computed as any)["font-size"]
-        : this.maxFontSize;
   }
 
-  public ngAfterViewInit() {
-    this.setFontSize(0);
+  getFontSize(): number {
+    return this.fontSize;
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes["compression"] && !changes["compression"].firstChange) {
-      this.setFontSize(0);
+  calculateFontSize(fontSize: number, speed: number): number {
+    return Math.floor(fontSize / speed);
+  }
+
+  checkOverflow(parent: HTMLElement, children: HTMLElement): boolean {
+    return (
+      this.hasXAxisOverflow(parent, children) ||
+      this.hasYAxisOverflow(parent, children)
+    );
+  }
+
+  hasXAxisOverflow(parent: HTMLElement, children: HTMLElement): boolean {
+    return children.scrollWidth - parent.clientWidth > 0;
+  }
+
+  hasYAxisOverflow(parent: HTMLElement, children: HTMLElement): boolean {
+    return children.clientHeight - parent.clientHeight > 0;
+  }
+
+  @HostListener("window:resize", ["$event"])
+  onResize(event: Event) {
+    this.done = false;
+    if (this.activateOnResize && this.fittext) {
+      if (this.activateOnInputEvents && this.fittext) {
+        this.setFontSize(this.getStartFontSizeFromHeight());
+      } else {
+        this.setFontSize(this.getStartFontSizeFromWeight());
+      }
+
+      this.ngAfterViewInit();
     }
-    if (changes["innerHTML"]) {
-      this.fittextElement.innerHTML = this.innerHTML;
-      if (!changes["innerHTML"].firstChange) {
-        this.setFontSize(0);
+  }
+
+  @HostListener("input", ["$event"])
+  onInputEvents(event: Event) {
+    this.done = false;
+    if (this.activateOnInputEvents && this.fittext) {
+      this.setFontSize(this.getStartFontSizeFromHeight());
+      this.ngAfterViewInit();
+    }
+  }
+
+  ngOnInit() {
+    this.done = false;
+    this.el.nativeElement.style.setProperty("will-change", "content");
+    this.ngAfterViewInit();
+  }
+
+  ngAfterViewInit() {
+    if (this.isVisible() && !this.isDone()) {
+      if (this.fittext) {
+        if (this.hasOverflow()) {
+          if (this.fontSize > this.minFontSize) {
+            // iterate only until font size is bigger than minimal value
+            this.setFontSize(this.calculateFontSize(this.fontSize, this.speed));
+            this.ngAfterViewInit();
+          }
+        } else {
+          this.done = true;
+        }
       }
     }
   }
 
-  private setFontSize = (delay: number = this.delay as number): void => {
-    setTimeout(
-      (() => {
-        if (
-          this.fittextElement.offsetHeight * this.fittextElement.offsetWidth !==
-          0
-        ) {
-          // reset to default
-          this.setStyles(this.calcSize, 1, "inline-block");
-          // set new
-          this.setStyles(
-            this.calculateNewFontSize(),
-            this.lineHeight,
-            this.display
-          );
-        }
-      }).bind(this),
-      delay
-    );
-  };
+  ngOnChanges(changes: any): void {
+    if (changes.modelToWatch) {
+      // change of model to watch - call ngAfterViewInit where is implemented logic to change size
+      setTimeout(() => {
+        this.done = false;
+        this.setFontSize(this.maxFontSize);
+        this.ngAfterViewInit();
+      });
+    }
+  }
 
-  private calculateNewFontSize = (): number => {
-    const ratio =
-      (this.calcSize * this.newlines) /
-      this.fittextElement.offsetWidth /
-      this.newlines;
+  ngAfterViewChecked() {
+    if (this.fontSize > this.minFontSize) {
+      this.setFontSize(this.getStartFontSizeFromHeight());
+      this.ngAfterViewInit();
+    }
+  }
 
-    return Math.max(
-      Math.min(
-        (this.fittextParent.offsetWidth -
-          (parseFloat(getComputedStyle(this.fittextParent).paddingLeft) +
-            parseFloat(getComputedStyle(this.fittextParent).paddingRight)) -
-          6) *
-          ratio *
-          (this.compression ?? 0),
-        this.fittextMaxFontSize
-      ),
-      this.fittextMinFontSize
-    );
-  };
+  getStartFontSizeFromHeight(): number {
+    return this.container
+      ? this.container.clientHeight
+      : (this.el.nativeElement.parentElement as any).clientHeight;
+  }
 
-  private setStyles = (
-    fontSize: number,
-    lineHeight: number | string,
-    display: string
-  ): void => {
-    this.renderer.setStyle(
-      this.fittextElement,
-      "fontSize",
-      fontSize.toString() + this.fontUnit
-    );
-    this.renderer.setStyle(
-      this.fittextElement,
-      "lineHeight",
-      lineHeight.toString()
-    );
-    this.renderer.setStyle(this.fittextElement, "display", display);
-  };
+  private getStartFontSizeFromWeight(): number {
+    return this.container
+      ? this.container.clientWidth
+      : (this.el.nativeElement.parentElement as any).clientWidth;
+  }
+
+  isDone(): boolean {
+    return this.done;
+  }
+
+  isVisible(): boolean {
+    return this.getStartFontSizeFromHeight() > 0;
+  }
+
+  hasOverflow(): boolean {
+    return this.container
+      ? this.checkOverflow(this.container, this.el.nativeElement)
+      : this.checkOverflow(
+          this.el.nativeElement.parentElement as any,
+          this.el.nativeElement
+        );
+  }
 }
