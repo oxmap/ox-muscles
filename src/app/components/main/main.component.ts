@@ -1,4 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
+import { FormControl } from "@angular/forms";
 import { MatStepper } from "@angular/material/stepper";
 import { Router } from "@angular/router";
 import { Question } from "src/app/interfaces/question.interface";
@@ -26,21 +27,27 @@ export class MainComponent {
     this.steps = [
       {
         label: "Секция",
+        control: new FormControl(""),
       },
       {
         label: "От",
+        control: new FormControl(""),
       },
       {
         label: "К",
+        control: new FormControl(""),
       },
       {
         label: "Функция",
+        control: new FormControl(""),
       },
       {
         label: "Иннервация",
+        control: new FormControl(""),
       },
       {
         label: "Кровь",
+        control: new FormControl(""),
       },
     ];
   }
@@ -52,22 +59,28 @@ export class MainComponent {
       this.validIndex = this.appService.validate(question);
       if (this.isSuccess) {
         this.appService.correctAnswers++;
+      } else {
+        this.stepper.selected?.stepControl.setErrors({ required: true });
       }
     } else {
-      this.submitText = "Ответить";
-      this.curAnswerIndex = null;
-      this.validIndex = null;
-      this.questionIndex++;
-      if (this.stepper.selectedIndex === this.steps.length - 1) {
-        this.stepper.selectedIndex = 0;
-        if (this.appService.isEnd) {
-          this.router.navigateByUrl("/results");
-          return;
-        }
-        this.appService.curMuscle++;
-      } else {
-        this.stepper.next();
+      this.nextStep();
+    }
+  }
+
+  private nextStep(): void {
+    this.submitText = "Ответить";
+    this.curAnswerIndex = null;
+    this.validIndex = null;
+    this.questionIndex++;
+    if (this.stepper.selectedIndex === this.steps.length - 1) {
+      this.stepper.selectedIndex = 0;
+      if (this.appService.isEnd) {
+        this.router.navigateByUrl("/results");
+        return;
       }
+      this.appService.curMuscle++;
+    } else {
+      this.stepper.next();
     }
   }
 }

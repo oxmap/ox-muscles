@@ -26,8 +26,14 @@ $current: rgb(104, 154, 211);
       color: white;
     }
 
-    .mat-step-icon-state-done {
-      background-color: #969ba5;
+    .mat-step-icon-state-error {
+      background-color: $error;
+      color: white;
+      border-color: transparent;
+    }
+
+    .mat-step-icon-state-edit {
+      background-color: $success;
       color: white;
       border-color: transparent;
     }

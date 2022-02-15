@@ -12,6 +12,7 @@ import { StartComponent } from "./components/start/start.component";
 import { NumericDirective } from "./directives/numeric.directive";
 import { ResultsComponent } from "./components/results/results.component";
 import { FittextDirective } from "./directives/fit-text.directive";
+import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
 
 @NgModule({
   declarations: [
@@ -31,7 +32,12 @@ import { FittextDirective } from "./directives/fit-text.directive";
     ReactiveFormsModule,
     AppRoutingModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: { showError: true },
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
