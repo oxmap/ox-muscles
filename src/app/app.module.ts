@@ -11,6 +11,7 @@ import { MainComponent } from "./components/main/main.component";
 import { StartComponent } from "./components/start/start.component";
 import { NumericDirective } from "./directives/numeric.directive";
 import { ResultsComponent } from "./components/results/results.component";
+import { FittextDirective } from "./directives/fit-text.directive";
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ResultsComponent } from "./components/results/results.component";
     NumericDirective,
     MainComponent,
     ResultsComponent,
+    FittextDirective,
   ],
   imports: [
     BrowserModule,

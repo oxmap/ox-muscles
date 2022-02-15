@@ -38,7 +38,7 @@
 >
   <div class="main-body">
     <mat-card class="main-card">
-      <p class="content">{{ main }}</p>
+      <p class="content" fittext>{{ main }}</p>
       <p class="status">
         {{ appService.curMuscle + 1 }}/{{ appService.count }}
       </p>
@@ -54,7 +54,7 @@
         (click)="!submitted && (curAnswerIndex = i)"
         (dblclick)="!submitted && submit(question)"
       >
-        <p class="answer">{{ answer.name }}</p>
+        <div class="answer" fittext>{{ answer.name }}</div>
       </mat-card>
     </div>
     <button
