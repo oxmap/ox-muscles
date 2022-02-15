@@ -12,7 +12,8 @@
 			"**/coverage": true,
 			"**/public": true,
 			"**/dist": true,
-			"**/.angular/cache": true
+			"**/.angular/cache": true,
+			"**/.firebase": true
 		},
 		"typescript.tsdk": "node_modules\\typescript\\lib"
 	}
