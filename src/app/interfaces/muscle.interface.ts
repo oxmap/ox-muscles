@@ -7,5 +7,4 @@ export interface Muscle {
   innervation: string;
   blood: string;
   section: string;
-  body: string;
 }

@@ -10,18 +10,20 @@ import { AppService } from "src/app/services/app.service";
   styleUrls: ["./main.component.scss"],
 })
 export class MainComponent {
-  public curIndex: number | null = null;
+  public curAnswerIndex: number | null = null;
   public submitText: string = "Ответить";
-  public isSuccess!: boolean;
+  public validIndex!: number | null;
   public submitted: boolean = false;
   public steps: any[];
+  public questionIndex: number = 0;
   @ViewChild(MatStepper) stepper!: MatStepper;
+
+  public get isSuccess(): boolean {
+    return this.validIndex === this.curAnswerIndex;
+  }
 
   constructor(public appService: AppService, private router: Router) {
     this.steps = [
-      {
-        label: "Часть тела",
-      },
       {
         label: "Секция",
       },
@@ -47,20 +49,22 @@ export class MainComponent {
     this.submitted = !this.submitted;
     if (this.submitted) {
       this.submitText = "Дальше";
-      this.isSuccess = this.appService.validate(this.curIndex, question);
+      this.validIndex = this.appService.validate(question);
       if (this.isSuccess) {
         this.appService.correctAnswers++;
       }
     } else {
       this.submitText = "Ответить";
-      this.curIndex = null;
+      this.curAnswerIndex = null;
+      this.validIndex = null;
+      this.questionIndex++;
       if (this.stepper.selectedIndex === this.steps.length - 1) {
         this.stepper.selectedIndex = 0;
-        this.appService.curMuscle++;
         if (this.appService.isEnd) {
           this.router.navigateByUrl("/results");
           return;
         }
+        this.appService.curMuscle++;
       } else {
         this.stepper.next();
       }
