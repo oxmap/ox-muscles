@@ -79,6 +79,8 @@ export class MainComponent {
         return;
       }
       this.appService.curMuscle++;
+      this.steps.forEach((step) => step.control.reset());
+      this.stepper.reset();
     } else {
       this.stepper.next();
     }
