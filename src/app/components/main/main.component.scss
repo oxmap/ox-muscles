@@ -8,6 +8,7 @@ $current: rgb(104, 154, 211);
     background: transparent;
   }
   .mat-step-header {
+    pointer-events: none !important;
     .mat-step-icon {
       font-weight: 500;
       background-color: white;
@@ -58,7 +59,7 @@ $current: rgb(104, 154, 211);
 
   .grid {
     display: grid;
-    gap: 2em;
+    gap: 2vmin;
     grid-template-columns: 1fr 1fr;
     .mat-card {
       cursor: pointer;
@@ -72,7 +73,8 @@ $current: rgb(104, 154, 211);
 
   .main-card {
     width: 50vw;
-    margin: 0 auto 2em auto;
+    height: 20vh;
+    margin: 0 auto 2vmin auto;
   }
 
   .status {
